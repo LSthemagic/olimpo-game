@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Person
+comment0.text=\r\n\ Classe\ Person.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=listImages\ currentImage\ animationCounter\ animationDelay
+comment1.target=void\ animationPerson(greenfoot.GreenfootImage[],\ int[],\ int[],\ int)
+comment1.text=\r\n\ M\u00E9todo\ para\ animar\ a\ caminhada.\r\n
+comment2.params=images\ currentImage\ animationCounter\ delay\ isLooping
+comment2.target=boolean\ animationPerson(greenfoot.GreenfootImage[],\ int[],\ int[],\ int,\ boolean)
+comment3.params=dx\ dy
+comment3.target=boolean\ colisionObject(int,\ int)
+comment4.params=walkingImages\ atackImages
+comment4.target=void\ invertImage(greenfoot.GreenfootImage[],\ greenfoot.GreenfootImage[])
+numComments=5
