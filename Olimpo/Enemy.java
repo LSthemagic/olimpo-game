@@ -1,50 +1,51 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-/**
- * Write a description of class Enemy here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class Enemy extends Person
 {
-    /**
-     * Act - do whatever the Enemy wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act()
-    {
-        // Add your action code here.
-    }
     
-        public void randomWalk(int speed, boolean isRightFacing, GreenfootImage[] walkingImages, GreenfootImage[] atackImages) {
-        int direction = Greenfoot.getRandomNumber(4);
-        
-        switch (direction) {
-            case 0: 
-                setLocation(getX() + speed, getY());
-                if (!isRightFacing) {
-                    isRightFacing = true;
-                    invertImage(walkingImages, atackImages);
-                }
-                break;
-            case 1: 
-                setLocation(getX() - speed, getY());
-                if (isRightFacing) {
-                    isRightFacing = false;
-                    invertImage(walkingImages, atackImages);
-                }
-                break;
-            case 2: 
-                setLocation(getX(), getY() - speed);
-                break;
-            case 3: 
-                setLocation(getX(), getY() + speed);
-                break;
-        }
+    private boolean isInverted = false;
+    
+    public Enemy(int health){
+        super(health);
+    }
+       
+    
+    protected void followMainPerson(int speed, GreenfootImage[] walkingImages, GreenfootImage[] attackImages) {
+       
+       
+         // Verifica se o MainPerson está no mundo
+        MainPerson mainPerson = (MainPerson) getWorld().getObjects(MainPerson.class).get(0);
+        if (mainPerson != null) {
+            // Obtém as coordenadas do MainPerson
+            int mainX = mainPerson.getX();
+            int mainY = mainPerson.getY();
+            
+            // Obtém as coordenadas atuais do inimigo
+            int enemyX = getX();
+            int enemyY = getY();
+            
+            // Calcula a direção para o MainPerson
+            int dx = mainX - enemyX;
+            int dy = mainY - enemyY;
+            
+            // Normaliza a direção para manter a velocidade constante
+            double length = Math.sqrt(dx * dx + dy * dy);
+            dx = (int) Math.round(dx / length);
+            dy = (int) Math.round(dy / length);
+            
+            if (dx < 0 && !isInverted) {
+               isInverted = true;
+               invertImage(walkingImages, attackImages);
+            }else if(dx > 0 && isInverted){
+                isInverted = false;
+                invertImage(walkingImages, attackImages);
+            }
 
-        if (atWorldEdge()) {
-            moveToCenter();
+
+            setLocation(enemyX + dx * speed, enemyY + dy * speed);
+            if (atWorldEdge()) {
+                moveToCenter();
+            }
         }
     }
     

@@ -16,17 +16,17 @@ public class GameOverScreen extends World
     public GameOverScreen()
     {    
         super(600, 400, 1); 
-        setBackground("gameover.jpg");
-        showText("Para jogar novamente pressione 'Enter' ou 'Space', caso contrário pressione 'Esc'", getWidth()/2, getHeight()/2);
+        setBackground(new GreenfootImage("gameover.jpg"));
+        showText("Para jogar novamente pressione 'Enter' ou 'Space' \n caso contrário pressione 'Esc'", getWidth() / 2, getHeight() / 2);
     }
     
     public void act(){
                
-        if (Greenfoot.isKeyDown("enter") || Greenfoot.isKeyDown("backespace")) {
+        if (Greenfoot.isKeyDown("enter") || Greenfoot.isKeyDown("space")) {
             Greenfoot.setWorld(new FirstWorld());
         }
-         if (Greenfoot.isKeyDown("esc")) {
-           System.exit(0);
+         if (Greenfoot.isKeyDown("escape")) {
+          Greenfoot.stop();
         }
     
     }

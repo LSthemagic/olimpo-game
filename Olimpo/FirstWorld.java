@@ -8,25 +8,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class FirstWorld extends World
 {
+    private HealthBar healthBar;
     public FirstWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(600, 400, 1); 
-        MainPerson mainPerson = new MainPerson();
-       
+        super(800, 500, 1); 
+        Person mainPerson = (MainPerson) new MainPerson(100);
+        Person second = (SecondPerson) new SecondPerson(100);
+        
         addObject(mainPerson, 100, 100); 
-        
-        Enemy enemy = new FirstEnemy();
-        Enemy enemy1 = new FirstEnemy();
-        Enemy enemy2 = new FirstEnemy(); 
-        Enemy enemy3 = new FirstEnemy();
-        Enemy enemy4 = new FirstEnemy();
-        addObject(enemy, 400, 100);
-        addObject(enemy1, 350, 120);
-        addObject(enemy2, 400, 10);
-        addObject(enemy3, 200, 210);
-        addObject(enemy4, 100, 350);
-        
-        
+        addObject(second, 400, 100);
     }
 }
