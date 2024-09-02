@@ -7,7 +7,7 @@ import java.util.List;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class MainPerson extends Person
+public class MainPerson extends GoodPerson
 {
     // Atributos para movimentação
     private GreenfootImage[] walkingImages;
@@ -23,9 +23,6 @@ public class MainPerson extends Person
     private int[] currentImageAtack= {0};
     private int[] animationCounterAtack= {0};
     private int animationDelayAtack = 5;
-    private boolean isAtacking = false;
-    private final int powerAttack = 1;
-    
     
     // Atributos para morte
     private GreenfootImage[] deadImages;
@@ -64,25 +61,26 @@ public class MainPerson extends Person
         }
     }
      
-    public void act()
-        {
+    public void act(){
             if (getIsDead()) {
                 animateDead();
                 bgSound.stop();
             } else {
                 healthBar.setLocation(getX(), getY() - 30);
-                
                 walkPerson(); 
                 if (isMoving) {
                     animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
                 }
-                eliminateEnemy(); 
-                animateAtackPerson();
-                if (!isMoving && !isAtacking) { 
+                if(getIsAttacking()){
+                    eliminateEnemy(); 
+                }
+                
+                animateAttack();
+                if (!isMoving && !getIsAttacking()) { 
                     setImage(new GreenfootImage("Idle1.png"));
                 }
                 
-                if (isAtacking && !Greenfoot.isKeyDown("f") && !isMoving ) {
+                if (getIsAttacking() && !Greenfoot.isKeyDown("space") && !isMoving ) {
                     setImage(new GreenfootImage("Idle1.png"));
                 }
             }
@@ -113,17 +111,11 @@ public class MainPerson extends Person
         }
     }
     
-    private void animateAtackPerson() {
-        if (Greenfoot.isKeyDown("f")) {
-            if (!isAtacking) {
-                isAtacking = true;
-                Greenfoot.playSound("espada.mp3");
-            }
-            animationPerson(atackImages, currentImageAtack, animationCounterAtack, animationDelayAtack);
-        } else {
-            isAtacking = false; // Reseta o estado de ataque
-        }
+    private void animateAttack(){
+        final boolean keyAttack = Greenfoot.isKeyDown("space");
+        animateAtackPerson(keyAttack, atackImages, currentImageAtack, animationCounter, animationDelayAtack);
     }
+
     
     private void animateDead() {
         boolean animationFinished = animationPerson(deadImages, currentImageDead, animationCounterDead, animationDelayDead, false);
@@ -133,38 +125,4 @@ public class MainPerson extends Person
         }
     }
 
-     
-    private void eliminateEnemy() {
-        if (isTouching(Enemy.class)) {
-            Enemy enemy = (Enemy) getOneIntersectingObject(Enemy.class);
-            
-            if (enemy != null) {
-                // Verifica a quantidade de inimigos restantes após remover o derrotado
-                List<Enemy> listEnemys = getWorld().getObjects(Enemy.class);
-                
-                if (Greenfoot.isKeyDown("f")) {
-                    //enemy.updateHealth(powerAttack);
-                }
-    
-                /*if (enemy.getHealth() <= 0) {
-                    getWorld().removeObject(enemy); // Remove o inimigo do mundo
-                    Greenfoot.playSound("win.mp3");
-                }*/
-                
-              
-                
-                if (listEnemys.size() <= 0) {
-                    Greenfoot.playSound("victory.mp3");
-                    getWorld().addObject(new VictoryScene(), 375, 250);
-                }
-                
-              
-            }
-        }
-    }
-   
-    private void removePerson(){
-        getWorld().removeObject(this);
-        return;
-    }
 }

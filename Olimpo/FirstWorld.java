@@ -13,10 +13,12 @@ public class FirstWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(800, 500, 1); 
-        Person mainPerson = (MainPerson) new MainPerson(100);
-        Person second = (SecondPerson) new SecondPerson(100);
+        GoodPerson mainPerson = (MainPerson) new MainPerson(100);
+        GoodPerson second = (SecondPerson) new SecondPerson(100);
+        Enemy enemy = (TesteEnemy) new TesteEnemy(100);
         
         addObject(mainPerson, 100, 100); 
         addObject(second, 400, 100);
+        addObject(enemy, 300, 350);
     }
 }

@@ -4,9 +4,20 @@ public class Enemy extends Person
 {
     
     private boolean isInverted = false;
+    private int timeAttack = 0;
+    private int powerAttack = 2;
+    private boolean isAttacking = false;
     
     public Enemy(int health){
         super(health);
+    }
+    
+    public void act(){
+        checkCollisionAndAttack();
+        if(isAttacking){
+            killMainPerson();    
+        }
+        
     }
        
     
@@ -49,7 +60,31 @@ public class Enemy extends Person
         }
     }
     
-    private boolean atWorldEdge() {
+    protected boolean getIsAttacking(){
+        return isAttacking;
+    }
+    
+    
+    protected void killMainPerson(){
+        GoodPerson goodPerson = (GoodPerson) getOneIntersectingObject(GoodPerson.class);
+        timeAttack++;
+        if (timeAttack == 25) { 
+            timeAttack = 0;
+            if(goodPerson != null){
+                goodPerson.updateHealth(powerAttack);
+            }   
+        }
+    }
+
+    protected void checkCollisionAndAttack() {
+        if (isTouching(GoodPerson.class)) {
+            isAttacking = true;
+        } else {
+            isAttacking = false;
+        }
+    }
+    
+    protected boolean atWorldEdge() {
         int x = getX();
         int y = getY();
         int worldWidth = getWorld().getWidth();
@@ -58,7 +93,7 @@ public class Enemy extends Person
         return x < 5 || x > worldWidth - 5 || y < 5 || y > worldHeight - 5;
     }
     
-    private void moveToCenter() {
+    protected void moveToCenter() {
         int centerX = getWorld().getWidth() / 2;
         int centerY = getWorld().getHeight() / 2;
         setLocation(centerX, centerY);

@@ -1,6 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-public class SecondPerson extends Person {
+public class SecondPerson extends GoodPerson {
     
     // Atributos de imagem
     private GreenfootImage[] walkingImages;
@@ -18,9 +18,6 @@ public class SecondPerson extends Person {
     private int[] currentImageAttack = {0};
     private int[] animationCounterAttack = {0};
     private int animationDelayAttack = 10; 
-    private boolean isAttacking = false;
-    private final int powerAtack = 1;
-    private int timeAttack = 0;
     
     //atributos de vida
     private HealthBar healthBar;
@@ -46,9 +43,10 @@ public class SecondPerson extends Person {
             return;
         }
         healthBar.setLocation(getX(), getY() - 30);
-        if (isAttacking) {
-            animationPerson(attackingImages, currentImageAttack, animationCounterAttack, animationDelayAttack);
-            killMainPerson();
+        animateAttack();
+        if (getIsAttacking()) {
+            animateAttack();
+            eliminateEnemy();
         } else {
             animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
             walking();
@@ -61,7 +59,7 @@ public class SecondPerson extends Person {
             
         }
         
-        checkCollisionAndAttack();
+        //checkCollisionAndAttack();
     }
     
     private void walking(){
@@ -86,23 +84,10 @@ public class SecondPerson extends Person {
         }
     }
     
-    private void killMainPerson(){
-        MainPerson protagonist = (MainPerson) getOneIntersectingObject(MainPerson.class);
-        timeAttack++;
-        if (timeAttack == 25) { 
-            timeAttack = 0;
-            if(protagonist != null){
-                protagonist.updateHealth(powerAtack);
-            }   
-        }
+    private void animateAttack(){
+        final boolean key = Greenfoot.isKeyDown("q");
+        animateAtackPerson(key, attackingImages, currentImageAttack, animationCounterAttack, animationDelayAttack);
     }
 
-    private void checkCollisionAndAttack() {
-        if (isTouching(MainPerson.class)) {
-            isAttacking = true;
-        } else {
-            isAttacking = false;
-        }
-    }
 
 }

@@ -46,6 +46,11 @@ public class Person extends Actor {
        
     }
     
+    protected void removePerson(Person person){
+        getWorld().removeObject(person);
+        return;
+    }
+    
     public void animationPerson(GreenfootImage[] listImages, int[] currentImage, int[] animationCounter, int animationDelay) {
        animationPerson(listImages, currentImage, animationCounter, animationDelay, true);
     }
