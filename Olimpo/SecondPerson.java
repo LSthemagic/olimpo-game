@@ -21,11 +21,15 @@ public class SecondPerson extends GoodPerson {
     
     //atributos de vida
     private HealthBar healthBar;
+    
     private boolean isFacingRight = true;
+    private Dust dust;
+    
      
     public SecondPerson(int health) {
         super(health);
         healthBar = getHealthBar();
+        dust = getDust();
         walkingImages = new GreenfootImage[8];
         attackingImages = new GreenfootImage[4];
         for (int i = 0; i < 8; i++) {
@@ -50,6 +54,7 @@ public class SecondPerson extends GoodPerson {
         } else {
             animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
             walking();
+            addDust();
             /*if (moveCounter >= moveDelay) {
                 moveCounter = 0;
                 //followMainPerson(speed, walkingImages, attackingImages);
@@ -62,6 +67,16 @@ public class SecondPerson extends GoodPerson {
         //checkCollisionAndAttack();
     }
     
+    private void addDust(){
+        getWorld().addObject(dust, getX() - 50, getY() + 30);
+        if(isFacingRight){
+            dust.setLocation(getX() - 50, getY() + 30);
+        }else{
+            dust.setLocation(getX() + 50, getY() + 30);
+        }
+    }
+
+    
     private void walking(){
         final boolean walkLeft = Greenfoot.isKeyDown("a");
         final boolean walkRight = Greenfoot.isKeyDown("d");
@@ -69,7 +84,7 @@ public class SecondPerson extends GoodPerson {
         final boolean walkDown = Greenfoot.isKeyDown("s");
         
         isMoving = walkPerson(walkLeft, walkRight, walkUp, walkDown,speed);
-        
+       
         if(walkLeft){
             if(isFacingRight){
                 invertImage(walkingImages, attackingImages);

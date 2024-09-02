@@ -1,20 +1,25 @@
 import greenfoot.*;
 
-/**
- * Classe Person.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class Person extends Actor {
-    
     private int health = 0;
     private boolean isDead = false;
     private HealthBar healthBar;
-    
-    public Person(int health){
+    private Dust effects;
+    private boolean isMoving = false;
+    private boolean effectsAdded = false;  // Novo atributo para rastrear se o efeito já foi adicionado
+
+    public Person() {
+        this(100);
+    }
+
+    public Person(int health) {
         this.health = health;
         healthBar = new HealthBar(getHealth(), 100, 10);
+        effects = new Dust();
+    }
+
+    public void setIsMoving(boolean isMoving){
+        this.isMoving = isMoving;
     }
     
     @Override
@@ -26,6 +31,10 @@ public class Person extends Actor {
         return healthBar;
     }
     
+    public Dust getDust(){
+        return effects;
+    }
+    
     public int getHealth(){
         return health;
     }
@@ -34,7 +43,7 @@ public class Person extends Actor {
         return isDead;
     }
     
-     public void updateHealth(int damage) {
+    public void updateHealth(int damage) {
         health -= damage;   
         healthBar.loseHealth(damage);
         if (getHealth() <= 0 && !isDead) {  // Verifica se a saúde chegou a zero e se ainda não foi marcado como morto
@@ -92,11 +101,11 @@ public class Person extends Actor {
         if (dx != 0 || dy !=0 ){
             if(!colisionObject(dx, dy)){
                 setLocation(getX() + dx, getY() + dy);
+                setIsMoving(true);
                 return true;
             }
-        }else{
-            return false;
         }
+        
         return false;
     }
     

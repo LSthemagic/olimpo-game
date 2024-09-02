@@ -36,9 +36,13 @@ public class MainPerson extends GoodPerson
     //atributos de vida
     private HealthBar healthBar;
     
+    //atributos para efeitos
+    private Dust dust;
+    
     public MainPerson(int health){ 
         super(health);
         healthBar = getHealthBar();
+        dust = getDust();
         //bgSound.playLoop();
         walkingImages = new GreenfootImage[8];
         atackImages = new GreenfootImage[4];
@@ -47,7 +51,6 @@ public class MainPerson extends GoodPerson
         
         for(int i = 0; i<8; i++){
             walkingImages[i] = new GreenfootImage("Walk"+(i+1)+".png");
-            
         }
         setImage(walkingImages[currentImage[0]]);
         
@@ -70,6 +73,11 @@ public class MainPerson extends GoodPerson
                 walkPerson(); 
                 if (isMoving) {
                     animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
+                    addDust();
+                    
+                    
+                }else{
+                    getWorld().removeObject(dust);
                 }
                 if(getIsAttacking()){
                     eliminateEnemy(); 
@@ -86,6 +94,16 @@ public class MainPerson extends GoodPerson
             }
     }
     
+    private void addDust(){
+        getWorld().addObject(dust, getX() - 50, getY() + 30);
+        if(isFacingRight){
+            dust.setLocation(getX() - 50, getY() + 30);
+        }else{
+            dust.setLocation(getX() + 50, getY() + 30);
+        }
+    }
+    
+    
     private void walkPerson(){
         int dx = 0;
         int dy = 0;
@@ -99,10 +117,12 @@ public class MainPerson extends GoodPerson
             dx -= speed;
             if(isFacingRight){
                 invertImage(walkingImages, atackImages);
+                
                 isFacingRight = false;
             }
         }
         if(walkRight){
+            
             dx += speed;
             if(!isFacingRight){
                 invertImage(walkingImages, atackImages);
