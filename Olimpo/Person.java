@@ -1,12 +1,13 @@
 import greenfoot.*;
+import java.util.List;
 
 public class Person extends Actor {
     private int health = 0;
     private boolean isDead = false;
     private HealthBar healthBar;
-    private Dust effects;
+    private Dust dust;
     private boolean isMoving = false;
-    private boolean effectsAdded = false;  // Novo atributo para rastrear se o efeito já foi adicionado
+    //private boolean dustAdded = false;
 
     public Person() {
         this(100);
@@ -14,25 +15,49 @@ public class Person extends Actor {
 
     public Person(int health) {
         this.health = health;
-        healthBar = new HealthBar(getHealth(), 100, 10);
-        effects = new Dust();
+        healthBar = new HealthBar(getHealth(), getHealth() , 10);
+        dust = new Dust();
     }
 
     public void setIsMoving(boolean isMoving){
         this.isMoving = isMoving;
-    }
-    
+    }     
+
     @Override
-    protected void addedToWorld(World world){
-        getWorld().addObject(healthBar, getX(), getY() - 30);
+    protected void addedToWorld(World world) {
+        List<Person> persons = getWorld().getObjects(Person.class);
+        int baseY = 20; 
+        int spacing = 35; 
+        
+        for (int i = 0; i < persons.size(); i++) {
+            Person p = persons.get(i);
+            int yPosition = baseY + i * spacing;
+            
+            // Adiciona a HealthBar no mundo
+            world.addObject(p.getHealthBar(), 100, yPosition);
+            
+            // Cria uma cópia da imagem do Person
+            GreenfootImage personImage = new GreenfootImage(p.getImage());
+            
+            // Escala a imagem copiada
+            personImage.scale(personImage.getWidth() / 2, personImage.getHeight() / 2);
+            
+            // Cria um Actor temporário com a imagem escalada
+            Actor imageActor = new Actor() {
+                { setImage(personImage); }
+            };
+            world.addObject(imageActor, 170, yPosition - 10);
+        }
     }
+
+
     
     public HealthBar getHealthBar(){
         return healthBar;
     }
     
     public Dust getDust(){
-        return effects;
+        return dust;
     }
     
     public int getHealth(){
@@ -46,13 +71,22 @@ public class Person extends Actor {
     public void updateHealth(int damage) {
         health -= damage;   
         healthBar.loseHealth(damage);
-        if (getHealth() <= 0 && !isDead) {  // Verifica se a saúde chegou a zero e se ainda não foi marcado como morto
+        if(getHealth() > 0){
+            spawnBloodEffect();
+        }
+        if (getHealth() <= 0 && !isDead) {
             isDead = true;
         }
-        if(getHealth() == 0){
-            Greenfoot.playSound("gameover.mp3");
-        }
+        
        
+    }
+
+    
+    private void spawnBloodEffect() {
+        Blood blood = new Blood();
+        BloodStain bloodStain = new BloodStain();
+        getWorld().addObject(blood, getX(), getY());
+        getWorld().addObject(bloodStain, getX(), getY());
     }
     
     protected void removePerson(Person person){

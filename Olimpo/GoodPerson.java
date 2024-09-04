@@ -11,16 +11,27 @@ public class GoodPerson extends Person
 {
     protected static int powerAttack = 1;
     private boolean isAtacking = false;
-    
-    public void act()
-    {
-        // Add your action code here.
-    }
+    protected static int quantityGoodPersonsDead = 0; 
+    int delay = 10;
+    int count = 0;
     
     public GoodPerson(int health) {
         super(health);
     }
     
+    public void gameOverScreen() {
+        if (getIsDead()) {
+            quantityGoodPersonsDead++;
+            System.out.println("lonely..."+ quantityGoodPersonsDead);
+        }
+        
+        if (quantityGoodPersonsDead >= 2) {
+            Greenfoot.playSound("gameover.mp3");
+            System.out.println("bem amigos, acabou...");
+            Greenfoot.setWorld(new GameOverScreen());
+        }
+    }
+
     protected void animateAtackPerson(boolean key, GreenfootImage[] images, int[] currentImage, int[] animationCounter, int delay) {
         if (key) {
             if (!isAtacking) {
@@ -35,32 +46,31 @@ public class GoodPerson extends Person
     
     protected void eliminateEnemy() {
         if (isTouching(Enemy.class)) {
-            Enemy enemy = (Enemy) getOneIntersectingObject(Enemy.class);
             
+            Enemy enemy = (Enemy) getOneIntersectingObject(Enemy.class);
             if (enemy != null) {
-                // Verifica a quantidade de inimigos restantes após remover o derrotado
-                List<Enemy> listEnemys = getWorld().getObjects(Enemy.class);
-                
                 if (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("q")) {
-                    enemy.updateHealth(powerAttack);
+                    count++;
+                    if(count >= delay){
+                        count = 0;
+                        enemy.updateHealth(powerAttack);
+                    }
                 }
-    
                 if (enemy.getHealth() <= 0) {
-                    getWorld().removeObject(enemy); // Remove o inimigo do mundo
+                    getWorld().removeObject(enemy);
                     Greenfoot.playSound("win.mp3");
                 }
-                
-              
-                
+                List<Enemy> listEnemys = getWorld().getObjects(Enemy.class);
                 if (listEnemys.size() <= 0) {
                     Greenfoot.playSound("victory.mp3");
                     getWorld().addObject(new VictoryScene(), 375, 250);
                 }
-                
-              
             }
         }
     }
+    
+
+
     
     public boolean getIsAttacking(){
         return isAtacking;

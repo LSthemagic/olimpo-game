@@ -14,7 +14,7 @@ public class HealthBar extends Actor
     private int barHeight;
     private int pixelsPerHealthPoint;
    
-    public HealthBar(int maxHealth, int barWidth, int barHeight){
+    public HealthBar(int maxHealth, int barWidth, int barHeight){    
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.barWidth = barWidth;

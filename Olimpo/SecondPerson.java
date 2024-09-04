@@ -20,7 +20,7 @@ public class SecondPerson extends GoodPerson {
     private int animationDelayAttack = 10; 
     
     //atributos de vida
-    private HealthBar healthBar;
+    //private HealthBar healthBar;
     
     private boolean isFacingRight = true;
     private Dust dust;
@@ -28,7 +28,7 @@ public class SecondPerson extends GoodPerson {
      
     public SecondPerson(int health) {
         super(health);
-        healthBar = getHealthBar();
+        //healthBar = getHealthBar();
         dust = getDust();
         walkingImages = new GreenfootImage[8];
         attackingImages = new GreenfootImage[4];
@@ -44,35 +44,56 @@ public class SecondPerson extends GoodPerson {
     public void act() {
         if (getIsDead()) {
             getWorld().removeObject(this);
+            gameOverScreen();
             return;
-        }
-        healthBar.setLocation(getX(), getY() - 30);
-        animateAttack();
-        if (getIsAttacking()) {
-            animateAttack();
-            eliminateEnemy();
         } else {
-            animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
+            //healthBar.setLocation(getX(), getY() - 30);
+            animateAttack();
             walking();
-            addDust();
-            /*if (moveCounter >= moveDelay) {
+                if (isMoving) {
+                    animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
+                    addDust();
+                }else{
+                    dust.startFadingOut();
+                }
+                
+                if(getIsAttacking()){
+                    eliminateEnemy(); 
+                }
+                
+                animateAttack();
+                if (!isMoving && !getIsAttacking()) { 
+                    setImage(new GreenfootImage("SecondPersonIdle.png"));
+                }
+                
+                if (getIsAttacking() && !Greenfoot.isKeyDown("q") && !isMoving ) {
+                    setImage(new GreenfootImage("SecondPersonIdle.png"));
+                }
+            }
+             /*if (moveCounter >= moveDelay) {
                 moveCounter = 0;
                 //followMainPerson(speed, walkingImages, attackingImages);
             } else {
                 moveCounter++;
             }*/
             
-        }
+        
         
         //checkCollisionAndAttack();
-    }
+        }
+           
     
-    private void addDust(){
-        getWorld().addObject(dust, getX() - 50, getY() + 30);
+    
+     private void addDust(){
+        if(dust.getFadingOut()){
+            dust.resetTransparency();
+        }
+        //dust.resetTransparency();
+        getWorld().addObject(dust, getX() - 30, getY() + 30);
         if(isFacingRight){
-            dust.setLocation(getX() - 50, getY() + 30);
+            dust.setLocation(getX() - 30, getY() + 30);
         }else{
-            dust.setLocation(getX() + 50, getY() + 30);
+            dust.setLocation(getX() + 40, getY() + 30);
         }
     }
 

@@ -1,12 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
 
-/**
- * Write a description of class MainPerson here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class MainPerson extends GoodPerson
 {
     // Atributos para movimentação
@@ -34,14 +28,14 @@ public class MainPerson extends GoodPerson
     protected GreenfootSound bgSound = new GreenfootSound("fundo.mp3");
     
     //atributos de vida
-    private HealthBar healthBar;
+    //private HealthBar healthBar;
     
     //atributos para efeitos
     private Dust dust;
     
     public MainPerson(int health){ 
         super(health);
-        healthBar = getHealthBar();
+        //healthBar = getHealthBar();
         dust = getDust();
         //bgSound.playLoop();
         walkingImages = new GreenfootImage[8];
@@ -67,17 +61,19 @@ public class MainPerson extends GoodPerson
     public void act(){
             if (getIsDead()) {
                 animateDead();
+                removePerson(this);
                 bgSound.stop();
+                dust.startFadingOut();
+                gameOverScreen();
+                return;
             } else {
-                healthBar.setLocation(getX(), getY() - 30);
+                
                 walkPerson(); 
                 if (isMoving) {
                     animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
                     addDust();
-                    
-                    
                 }else{
-                    getWorld().removeObject(dust);
+                    dust.startFadingOut();
                 }
                 if(getIsAttacking()){
                     eliminateEnemy(); 
@@ -94,12 +90,16 @@ public class MainPerson extends GoodPerson
             }
     }
     
-    private void addDust(){
-        getWorld().addObject(dust, getX() - 50, getY() + 30);
+     private void addDust(){
+        if(dust.getFadingOut()){
+            dust.resetTransparency();
+        }
+        //dust.resetTransparency();
+        getWorld().addObject(dust, getX() - 30, getY() + 30);
         if(isFacingRight){
-            dust.setLocation(getX() - 50, getY() + 30);
+            dust.setLocation(getX() - 30, getY() + 30);
         }else{
-            dust.setLocation(getX() + 50, getY() + 30);
+            dust.setLocation(getX() + 40, getY() + 30);
         }
     }
     
@@ -117,12 +117,10 @@ public class MainPerson extends GoodPerson
             dx -= speed;
             if(isFacingRight){
                 invertImage(walkingImages, atackImages);
-                
                 isFacingRight = false;
             }
         }
         if(walkRight){
-            
             dx += speed;
             if(!isFacingRight){
                 invertImage(walkingImages, atackImages);
@@ -140,9 +138,9 @@ public class MainPerson extends GoodPerson
     private void animateDead() {
         boolean animationFinished = animationPerson(deadImages, currentImageDead, animationCounterDead, animationDelayDead, false);
         // Verifica se a animação terminou  
-        if (animationFinished) {
+        /*if (animationFinished) {
             Greenfoot.setWorld(new GameOverScreen());
-        }
+        }*/
     }
 
 }

@@ -1,10 +1,10 @@
 #BlueJ class context
 comment0.target=GoodPerson
 comment0.text=\r\n\ Write\ a\ description\ of\ class\ GoodPerson\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=
-comment1.target=void\ act()
-comment2.params=health
-comment2.target=GoodPerson(int)
+comment1.params=health
+comment1.target=GoodPerson(int)
+comment2.params=
+comment2.target=void\ gameOverScreen()
 comment3.params=key\ images\ currentImage\ animationCounter\ delay
 comment3.target=void\ animateAtackPerson(boolean,\ greenfoot.GreenfootImage[],\ int[],\ int[],\ int)
 comment4.params=

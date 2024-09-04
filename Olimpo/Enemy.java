@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.List;
 
 public class Enemy extends Person
 {
@@ -12,53 +13,68 @@ public class Enemy extends Person
         super(health);
     }
     
-    public void act(){
+    /*public void act(){
         checkCollisionAndAttack();
         if(isAttacking){
             killMainPerson();    
         }
         
-    }
+    }*/
        
     
     protected void followMainPerson(int speed, GreenfootImage[] walkingImages, GreenfootImage[] attackImages) {
-       
-       
-         // Verifica se o MainPerson está no mundo
-        MainPerson mainPerson = (MainPerson) getWorld().getObjects(MainPerson.class).get(0);
-        if (mainPerson != null) {
-            // Obtém as coordenadas do MainPerson
-            int mainX = mainPerson.getX();
-            int mainY = mainPerson.getY();
-            
-            // Obtém as coordenadas atuais do inimigo
-            int enemyX = getX();
-            int enemyY = getY();
-            
-            // Calcula a direção para o MainPerson
-            int dx = mainX - enemyX;
-            int dy = mainY - enemyY;
-            
-            // Normaliza a direção para manter a velocidade constante
-            double length = Math.sqrt(dx * dx + dy * dy);
-            dx = (int) Math.round(dx / length);
-            dy = (int) Math.round(dy / length);
-            
-            if (dx < 0 && !isInverted) {
-               isInverted = true;
-               invertImage(walkingImages, attackImages);
-            }else if(dx > 0 && isInverted){
-                isInverted = false;
-                invertImage(walkingImages, attackImages);
+        List<GoodPerson> goodPersons = getWorld().getObjects(GoodPerson.class);
+        if (!goodPersons.isEmpty()) {
+            GoodPerson closestPerson = null;
+            double closestDistance = Double.MAX_VALUE;
+            for (GoodPerson p : goodPersons) {
+                int distanceX = p.getX() - getX();
+                int distanceY = p.getY() - getY();
+                double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPerson = p;
+                }
             }
-
-
-            setLocation(enemyX + dx * speed, enemyY + dy * speed);
-            if (atWorldEdge()) {
-                moveToCenter();
+    
+            if (closestPerson != null) {
+                int mainX = closestPerson.getX();
+                int mainY = closestPerson.getY();
+                int enemyX = getX();
+                int enemyY = getY();
+    
+                // Calcula a direção para o GoodPerson mais próximo
+                int dx = mainX - enemyX;
+                int dy = mainY - enemyY;
+    
+                // Normaliza a direção para manter a velocidade constante
+                double length = Math.sqrt(dx * dx + dy * dy);
+                dx = (int) Math.round(dx / length);
+                dy = (int) Math.round(dy / length);
+    
+                // Inverte as imagens se necessário, dependendo da direção
+                if (walkingImages != null) {
+                    if (dx < 0 && !isInverted) {
+                        isInverted = true;
+                        invertImage(walkingImages, attackImages);
+                    } else if (dx > 0 && isInverted) {
+                        isInverted = false;
+                        invertImage(walkingImages, attackImages);
+                    }
+                }
+    
+                // Move o inimigo em direção ao GoodPerson mais próximo
+                setLocation(enemyX + dx * speed, enemyY + dy * speed);
+    
+                // Verifica se está na borda do mundo
+                if (atWorldEdge()) {
+                    moveToCenter();
+                }
             }
         }
     }
+
     
     protected boolean getIsAttacking(){
         return isAttacking;
