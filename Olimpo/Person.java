@@ -3,18 +3,20 @@ import java.util.List;
 
 public class Person extends Actor {
     private int health = 0;
+    private int maxHealth = 0;
     private boolean isDead = false;
     private HealthBar healthBar;
     private Dust dust;
     private boolean isMoving = false;
-    //private boolean dustAdded = false;
-
+    private boolean healthAdded = false;
+    
     public Person() {
         this(100);
     }
 
     public Person(int health) {
         this.health = health;
+        this.maxHealth = health;
         healthBar = new HealthBar(getHealth(), getHealth() , 10);
         dust = new Dust();
     }
@@ -28,30 +30,32 @@ public class Person extends Actor {
         List<Person> persons = getWorld().getObjects(Person.class);
         int baseY = 20; 
         int spacing = 35; 
-        
-        for (int i = 0; i < persons.size(); i++) {
-            Person p = persons.get(i);
-            int yPosition = baseY + i * spacing;
-            
-            // Adiciona a HealthBar no mundo
-            world.addObject(p.getHealthBar(), 100, yPosition);
-            
-            // Cria uma cópia da imagem do Person
-            GreenfootImage personImage = new GreenfootImage(p.getImage());
-            
-            // Escala a imagem copiada
-            personImage.scale(personImage.getWidth() / 2, personImage.getHeight() / 2);
-            
-            // Cria um Actor temporário com a imagem escalada
-            Actor imageActor = new Actor() {
-                { setImage(personImage); }
-            };
-            world.addObject(imageActor, 170, yPosition - 10);
+        if(!healthAdded){
+            healthAdded = true;
+            for (int i = 0; i < persons.size(); i++) {
+                Person p = persons.get(i);
+                int yPosition = baseY + i * spacing;
+                
+                
+                // Adiciona a HealthBar no mundo
+                world.addObject(p.getHealthBar(), 100, yPosition);
+                
+                // Cria uma cópia da imagem do Person
+                GreenfootImage personImage = new GreenfootImage(p.getImage());
+                
+                // Escala a imagem copiada
+                personImage.scale(personImage.getWidth() / 2, personImage.getHeight() / 2);
+                
+                // Cria um Actor temporário com a imagem escalada
+                Actor imageActor = new Actor() {
+                    { setImage(personImage); }
+                };
+                world.addObject(imageActor, 170, yPosition - 10);
+                
+            }
         }
     }
 
-
-    
     public HealthBar getHealthBar(){
         return healthBar;
     }
@@ -78,10 +82,15 @@ public class Person extends Actor {
             isDead = true;
         }
         
-       
+    }
+    
+    public void gainHealth(int amount) {
+        health += amount;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
     }
 
-    
     private void spawnBloodEffect() {
         Blood blood = new Blood();
         BloodStain bloodStain = new BloodStain();
@@ -143,7 +152,6 @@ public class Person extends Actor {
         return false;
     }
     
-    
     public boolean colisionObject(int dx, int dy){
         int futureX = getX() + dx;
         int futureY = getY() + dy;
@@ -151,8 +159,6 @@ public class Person extends Actor {
         setLocation(futureX, futureY);
         
         boolean colision = isTouching(Wall.class);
-        
-        
         setLocation(getX() - dx, getY() - dy);
         
         return colision;

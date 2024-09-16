@@ -16,7 +16,7 @@ public class GameOverScreen extends World
     public GameOverScreen()
     {    
         super(600, 400, 1); 
-        setBackground(new GreenfootImage("gameover.jpg"));
+        setBackground(new GreenfootImage("world/gameover.jpg"));
         showText("Para jogar novamente pressione 'Enter' \n caso contrário pressione 'Esc'", getWidth() / 2, getHeight() / 2);
     }
     

@@ -44,16 +44,16 @@ public class MainPerson extends GoodPerson
         
         
         for(int i = 0; i<8; i++){
-            walkingImages[i] = new GreenfootImage("Walk"+(i+1)+".png");
+            walkingImages[i] = new GreenfootImage("persons/mainPerson/walk/Walk"+(i+1)+".png");
         }
         setImage(walkingImages[currentImage[0]]);
         
         for(int i = 0; i<4;i++){
-            atackImages[i] = new GreenfootImage("MainAtack"+(i+1)+".png");
+            atackImages[i] = new GreenfootImage("persons/mainPerson/attack/MainAtack"+(i+1)+".png");
         }
         
         for(int i = 0; i<4;i++){
-            deadImages[i] = new GreenfootImage("mainPersonDead"+(i+1)+".png");
+            deadImages[i] = new GreenfootImage("persons/mainPerson/dead/mainPersonDead"+(i+1)+".png");
             
         }
     }
@@ -67,7 +67,6 @@ public class MainPerson extends GoodPerson
                 gameOverScreen();
                 return;
             } else {
-                
                 walkPerson(); 
                 if (isMoving) {
                     animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
@@ -81,11 +80,11 @@ public class MainPerson extends GoodPerson
                 
                 animateAttack();
                 if (!isMoving && !getIsAttacking()) { 
-                    setImage(new GreenfootImage("Idle1.png"));
+                    setImage(new GreenfootImage("persons/mainPerson/idle/Idle1.png"));
                 }
                 
                 if (getIsAttacking() && !Greenfoot.isKeyDown("space") && !isMoving ) {
-                    setImage(new GreenfootImage("Idle1.png"));
+                    setImage(new GreenfootImage("persons/mainPerson/idle/Idle1.png"));
                 }
             }
     }

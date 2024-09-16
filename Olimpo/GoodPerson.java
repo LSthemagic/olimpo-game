@@ -69,9 +69,6 @@ public class GoodPerson extends Person
         }
     }
     
-
-
-    
     public boolean getIsAttacking(){
         return isAtacking;
     }

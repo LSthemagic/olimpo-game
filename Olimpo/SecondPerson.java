@@ -33,10 +33,10 @@ public class SecondPerson extends GoodPerson {
         walkingImages = new GreenfootImage[8];
         attackingImages = new GreenfootImage[4];
         for (int i = 0; i < 8; i++) {
-            walkingImages[i] = new GreenfootImage("SecondPersonWalk" + (i + 1) + ".png");
+            walkingImages[i] = new GreenfootImage("persons/secondPerson/walk/SecondPersonWalk" + (i + 1) + ".png");
         }
         for (int i = 0; i < 4; i++) {
-            attackingImages[i] = new GreenfootImage("SecondPersonAttack" + (i + 1) + ".png");
+            attackingImages[i] = new GreenfootImage("persons/secondPerson/attack/SecondPersonAttack" + (i + 1) + ".png");
         }
         setImage(walkingImages[currentImage[0]]);
     }
@@ -63,11 +63,11 @@ public class SecondPerson extends GoodPerson {
                 
                 animateAttack();
                 if (!isMoving && !getIsAttacking()) { 
-                    setImage(new GreenfootImage("SecondPersonIdle.png"));
+                    setImage(new GreenfootImage("persons/secondPerson/idle/SecondPersonIdle.png"));
                 }
                 
                 if (getIsAttacking() && !Greenfoot.isKeyDown("q") && !isMoving ) {
-                    setImage(new GreenfootImage("SecondPersonIdle.png"));
+                    setImage(new GreenfootImage("persons/secondPerson/idle/SecondPersonIdle.png"));
                 }
             }
              /*if (moveCounter >= moveDelay) {
