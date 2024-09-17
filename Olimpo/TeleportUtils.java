@@ -18,7 +18,7 @@ class TeleportUtils {
             int dy = Math.abs(goodPerson.getY() - y);
 
             if (dx <= toleranceX && dy <= toleranceY) {
-                System.out.println("Personagem está na área de teletransporte.");
+                //System.out.println("Personagem está na área de teletransporte.");
                 
                 
                 HealthBar healthBar = goodPerson.getHealthBar();
@@ -41,7 +41,7 @@ class TeleportUtils {
             int dy = Math.abs(goodPerson.getY() - y);
 
             if (dx <= toleranceX && dy <= toleranceY) {
-                System.out.println("Personagem está na área de retorno.");
+                //System.out.println("Personagem está na área de retorno.");
                 
                 // Captura a HealthBar antes de mudar de mundo
                 HealthBar healthBar = goodPerson.getHealthBar();

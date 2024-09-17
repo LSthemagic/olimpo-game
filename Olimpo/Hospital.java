@@ -33,15 +33,12 @@ public class Hospital extends World {
         if(person!=null){
             if (doctor.isTreatment()){
                 countTreatment++;
-                if(countTreatment < timeForTreatment) {
+                if(countTreatment == timeForTreatment) {
                     person.getHealthBar().gainHealth(1);
                     person.gainHealth(1);
-                }
-                    
-                if(countTreatment == timeForTreatment) {
                     countTreatment = 0;
                 }
-                System.out.println(countTreatment);
+                //System.out.println(countTreatment);
             }
         }
     }

@@ -32,7 +32,6 @@ public class Dust extends Effects {
     
     private void animateDust() {     
         animationCounter++;
-        
         if (animationCounter >= animationDelay) {
             animationCounter = 0;
             currentImage++;

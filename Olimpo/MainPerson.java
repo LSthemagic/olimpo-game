@@ -23,21 +23,17 @@ public class MainPerson extends GoodPerson
     private int[] currentImageDead = {0};
     private int[] animationCounterDead= {0};
     private int animationDelayDead = 15;
-    
-    //atributos de som
-    protected GreenfootSound bgSound = new GreenfootSound("fundo.mp3");
-    
-    //atributos de vida
-    //private HealthBar healthBar;
+    private boolean deadAnimationFinished = false;
+    private boolean deathProcessed = false; 
     
     //atributos para efeitos
     private Dust dust;
     
+    
+    
     public MainPerson(int health){ 
         super(health);
-        //healthBar = getHealthBar();
         dust = getDust();
-        //bgSound.playLoop();
         walkingImages = new GreenfootImage[8];
         atackImages = new GreenfootImage[4];
         deadImages = new GreenfootImage[4];
@@ -59,41 +55,42 @@ public class MainPerson extends GoodPerson
     }
      
     public void act(){
-            if (getIsDead()) {
-                animateDead();
+        if (getIsDead() && !deathProcessed) {
+            animateDead();
+            if(deadAnimationFinished){
                 removePerson(this);
-                bgSound.stop();
+                updateDeathCountAndCheckGameOver();
                 dust.startFadingOut();
-                gameOverScreen();
-                return;
-            } else {
-                walkPerson(); 
-                if (isMoving) {
-                    animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
-                    addDust();
-                }else{
-                    dust.startFadingOut();
-                }
-                if(getIsAttacking()){
-                    eliminateEnemy(); 
-                }
-                
-                animateAttack();
-                if (!isMoving && !getIsAttacking()) { 
-                    setImage(new GreenfootImage("persons/mainPerson/idle/Idle1.png"));
-                }
-                
-                if (getIsAttacking() && !Greenfoot.isKeyDown("space") && !isMoving ) {
-                    setImage(new GreenfootImage("persons/mainPerson/idle/Idle1.png"));
-                }
+                deathProcessed = true;
             }
+        } else {
+            walkPerson(); 
+            
+            if (isMoving) {
+                animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
+                addDust();
+            }else{
+                dust.startFadingOut();
+            }
+            
+            eliminateEnemy(); 
+            
+            
+            animateAttack();
+            if (!isMoving && !getIsAttacking()) { 
+                setImage(new GreenfootImage("persons/mainPerson/idle/Idle1.png"));
+            }
+            
+            if (getIsAttacking() && !Greenfoot.isKeyDown("space") && !isMoving ) {
+                setImage(new GreenfootImage("persons/mainPerson/idle/Idle1.png"));
+            }
+        }
     }
     
      private void addDust(){
         if(dust.getFadingOut()){
             dust.resetTransparency();
         }
-        //dust.resetTransparency();
         getWorld().addObject(dust, getX() - 30, getY() + 30);
         if(isFacingRight){
             dust.setLocation(getX() - 30, getY() + 30);
@@ -135,11 +132,7 @@ public class MainPerson extends GoodPerson
 
     
     private void animateDead() {
-        boolean animationFinished = animationPerson(deadImages, currentImageDead, animationCounterDead, animationDelayDead, false);
-        // Verifica se a animação terminou  
-        /*if (animationFinished) {
-            Greenfoot.setWorld(new GameOverScreen());
-        }*/
+        deadAnimationFinished = animationPerson(deadImages, currentImageDead, animationCounterDead, animationDelayDead, false);
     }
 
 }

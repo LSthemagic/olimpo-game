@@ -9,18 +9,14 @@ public class Enemy extends Person
     private int powerAttack = 2;
     private boolean isAttacking = false;
     
+    
     public Enemy(int health){
         super(health);
     }
     
-    /*public void act(){
-        checkCollisionAndAttack();
-        if(isAttacking){
-            killMainPerson();    
-        }
-        
-    }*/
-       
+    public Enemy(){
+        super(100);
+    }
     
     protected void followMainPerson(int speed, GreenfootImage[] walkingImages, GreenfootImage[] attackImages) {
         List<GoodPerson> goodPersons = getWorld().getObjects(GoodPerson.class);
@@ -63,10 +59,13 @@ public class Enemy extends Person
                         invertImage(walkingImages, attackImages);
                     }
                 }
-    
+                
                 // Move o inimigo em direção ao GoodPerson mais próximo
                 setLocation(enemyX + dx * speed, enemyY + dy * speed);
     
+                //evita sobreposição de inimigos
+                avoidPersonOverlap();
+                
                 // Verifica se está na borda do mundo
                 if (atWorldEdge()) {
                     moveToCenter();
@@ -74,12 +73,14 @@ public class Enemy extends Person
             }
         }
     }
-
     
     protected boolean getIsAttacking(){
         return isAttacking;
     }
     
+    protected boolean getIsInverted(){
+        return isInverted;
+    }
     
     protected void killMainPerson(){
         GoodPerson goodPerson = (GoodPerson) getOneIntersectingObject(GoodPerson.class);

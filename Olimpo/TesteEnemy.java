@@ -13,7 +13,7 @@ public class TesteEnemy extends Enemy
             removePerson(this);
         }
         
-        followMainPerson(2, null, null);
+        followMainPerson(1, null, null);
     }
     
     public TesteEnemy(int health){

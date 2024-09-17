@@ -9,6 +9,8 @@ public class Person extends Actor {
     private Dust dust;
     private boolean isMoving = false;
     private boolean healthAdded = false;
+    private int minDistanceBetweenPersons = 50;
+    
     
     public Person() {
         this(100);
@@ -35,8 +37,6 @@ public class Person extends Actor {
             for (int i = 0; i < persons.size(); i++) {
                 Person p = persons.get(i);
                 int yPosition = baseY + i * spacing;
-                
-                
                 // Adiciona a HealthBar no mundo
                 world.addObject(p.getHealthBar(), 100, yPosition);
                 
@@ -82,6 +82,25 @@ public class Person extends Actor {
             isDead = true;
         }
         
+    }
+    
+    protected void avoidPersonOverlap() {
+        List<Person> persons = getWorld().getObjects(Person.class);
+        for (Person otherPerson : persons) {
+            if (otherPerson != this) {
+                int distanceX = otherPerson.getX() - getX();
+                int distanceY = otherPerson.getY() - getY();
+                double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                if (distance < minDistanceBetweenPersons) {
+                    // Move o inimigo na direção oposta ao outro para evitar sobreposição
+                    int dx = (int) Math.round(distanceX / distance);
+                    int dy = (int) Math.round(distanceY / distance);
+
+                    setLocation(getX() - dx, getY() - dy);
+                }
+            }
+        }
     }
     
     public void gainHealth(int amount) {
@@ -142,6 +161,7 @@ public class Person extends Actor {
             dy += speed;
         }
         if (dx != 0 || dy !=0 ){
+            avoidPersonOverlap();
             if(!colisionObject(dx, dy)){
                 setLocation(getX() + dx, getY() + dy);
                 setIsMoving(true);

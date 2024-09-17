@@ -5,6 +5,7 @@ public class SecondPerson extends GoodPerson {
     // Atributos de imagem
     private GreenfootImage[] walkingImages;
     private GreenfootImage[] attackingImages;
+    private GreenfootImage[] deadImages;
     private int[] currentImage = {0};
     private int[] animationCounter = {0};
     private int animationDelay = 6; 
@@ -19,68 +20,67 @@ public class SecondPerson extends GoodPerson {
     private int[] animationCounterAttack = {0};
     private int animationDelayAttack = 10; 
     
-    //atributos de vida
-    //private HealthBar healthBar;
+    private int[] currentImageDead = {0};
+    private int[] animationCounterDead = {0};
     
     private boolean isFacingRight = true;
     private Dust dust;
     
+    private boolean deathProcessed = false;
+    private boolean deadAnimationFinished = false;
      
     public SecondPerson(int health) {
         super(health);
-        //healthBar = getHealthBar();
         dust = getDust();
         walkingImages = new GreenfootImage[8];
         attackingImages = new GreenfootImage[4];
+        deadImages = new GreenfootImage[4];
         for (int i = 0; i < 8; i++) {
             walkingImages[i] = new GreenfootImage("persons/secondPerson/walk/SecondPersonWalk" + (i + 1) + ".png");
         }
         for (int i = 0; i < 4; i++) {
             attackingImages[i] = new GreenfootImage("persons/secondPerson/attack/SecondPersonAttack" + (i + 1) + ".png");
         }
+        for (int i = 0; i < 4; i++) {
+            deadImages[i] = new GreenfootImage("persons/secondPerson/dead/Dead (0_" + (i) + ").png");
+        }
         setImage(walkingImages[currentImage[0]]);
     }
 
     public void act() {
-        if (getIsDead()) {
-            getWorld().removeObject(this);
-            gameOverScreen();
+        if (getIsDead() && !deathProcessed) {
+            animateDead();
+            if(deadAnimationFinished){
+                removePerson(this);
+                updateDeathCountAndCheckGameOver();
+                dust.startFadingOut();
+                deathProcessed = true;
+            }
             return;
         } else {
-            //healthBar.setLocation(getX(), getY() - 30);
             animateAttack();
             walking();
-                if (isMoving) {
-                    animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
-                    addDust();
-                }else{
-                    dust.startFadingOut();
-                }
-                
-                if(getIsAttacking()){
-                    eliminateEnemy(); 
-                }
-                
-                animateAttack();
-                if (!isMoving && !getIsAttacking()) { 
-                    setImage(new GreenfootImage("persons/secondPerson/idle/SecondPersonIdle.png"));
-                }
-                
-                if (getIsAttacking() && !Greenfoot.isKeyDown("q") && !isMoving ) {
-                    setImage(new GreenfootImage("persons/secondPerson/idle/SecondPersonIdle.png"));
-                }
+            if (isMoving) {
+                animationPerson(walkingImages, currentImage, animationCounter, animationDelay);
+                addDust();
+            }else{
+                dust.startFadingOut();
             }
-             /*if (moveCounter >= moveDelay) {
-                moveCounter = 0;
-                //followMainPerson(speed, walkingImages, attackingImages);
-            } else {
-                moveCounter++;
-            }*/
             
-        
-        
-        //checkCollisionAndAttack();
+            
+                eliminateEnemy(); 
+            
+            
+            animateAttack();
+            if (!isMoving && !getIsAttacking()) { 
+                setImage(new GreenfootImage("persons/secondPerson/idle/SecondPersonIdle.png"));
+            }
+            
+            if (getIsAttacking() && !Greenfoot.isKeyDown("q") && !isMoving ) {
+                setImage(new GreenfootImage("persons/secondPerson/idle/SecondPersonIdle.png"));
+            }
         }
+    }
            
     
     
@@ -88,7 +88,6 @@ public class SecondPerson extends GoodPerson {
         if(dust.getFadingOut()){
             dust.resetTransparency();
         }
-        //dust.resetTransparency();
         getWorld().addObject(dust, getX() - 30, getY() + 30);
         if(isFacingRight){
             dust.setLocation(getX() - 30, getY() + 30);
@@ -124,6 +123,9 @@ public class SecondPerson extends GoodPerson {
         final boolean key = Greenfoot.isKeyDown("q");
         animateAtackPerson(key, attackingImages, currentImageAttack, animationCounterAttack, animationDelayAttack);
     }
-
+    
+    private void animateDead(){
+        deadAnimationFinished = animationPerson(deadImages, currentImageDead, animationCounterDead, 15, false);
+    }
 
 }
