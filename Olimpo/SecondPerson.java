@@ -19,6 +19,10 @@ public class SecondPerson extends GoodPerson {
     private int[] currentImageAttack = {0};
     private int[] animationCounterAttack = {0};
     private int animationDelayAttack = 10; 
+    private int powerAttack = 2;
+    private int specialAttackPower = 50; // Poder do ataque especial
+    private boolean isSpecialAttacked = false; // Marca se o ataque especial está ativo
+    private boolean isSpecialUsed = false; // Marca se o ataque especial está ativo
     
     private int[] currentImageDead = {0};
     private int[] animationCounterDead = {0};
@@ -67,9 +71,14 @@ public class SecondPerson extends GoodPerson {
                 dust.startFadingOut();
             }
             
-            
-                eliminateEnemy(); 
-            
+            // Lógica para ativar o ataque especial
+            if (Greenfoot.isKeyDown("e") && !isSpecialUsed) {
+                isSpecialAttacked = true; // Ativa o ataque especial
+            } 
+    
+            // Chamada para eliminar inimigos
+            eliminateEnemy(isSpecialAttacked ? specialAttackPower : powerAttack);
+            animateAttack();
             
             animateAttack();
             if (!isMoving && !getIsAttacking()) { 

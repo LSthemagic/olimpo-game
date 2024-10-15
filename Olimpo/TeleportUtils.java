@@ -33,7 +33,7 @@ class TeleportUtils {
         }
     }
 
-    public static void teleportBackToWorld(World currentWorld, FirstWorld firstWorld, int x, int y, int toleranceX, int toleranceY) {
+    public static void teleportBackToWorld(World currentWorld, World warWorld, int x, int y, int toleranceX, int toleranceY) {
         List<GoodPerson> goodPersons = currentWorld.getObjects(GoodPerson.class);
 
         for (GoodPerson goodPerson : goodPersons) {
@@ -47,11 +47,11 @@ class TeleportUtils {
                 HealthBar healthBar = goodPerson.getHealthBar();
                 
 
-                firstWorld.addObject(goodPerson, goodPerson.getX(), goodPerson.getY());
-                firstWorld.addObject(healthBar, healthBar.getX(), healthBar.getY()); // Posiciona a HealthBar
+                warWorld.addObject(goodPerson, 540, 30);
+                warWorld.addObject(healthBar, healthBar.getX(), healthBar.getY()); // Posiciona a HealthBar
                 //goodPerson.addedToWorld(firstWorld);
                 
-                Greenfoot.setWorld(firstWorld);
+                Greenfoot.setWorld(warWorld);
                 break;
             }
         }

@@ -4,12 +4,10 @@ public class StartScreen extends World {
 
     public StartScreen() {    
         
-        super(600, 400, 1); 
+        super(1067, 600, 1); 
          
        
-        setBackground("world/startscreen.jpg");
-        
-        showText("Pressione 'Enter' para começar", getWidth() / 2, getHeight() / 2);
+        setBackground("world/startScreen.png");
     }
 
     public void act() {

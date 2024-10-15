@@ -8,7 +8,7 @@ public class FirstEnemy extends Enemy
     private int[] currentImage = {0};  
     private int[] animationCounter = {0};  
     private int animationDelay = 9;
-    boolean deadAnimationFinished = false;
+    
     
     private Dust dust;
     public FirstEnemy(int health){
@@ -36,11 +36,13 @@ public class FirstEnemy extends Enemy
     {
         if (getIsDead()) {
             animateDead();
-            if(deadAnimationFinished)
+            if (deadAnimationFinished && isMarkedForRemoval()) {
                 removePerson(this);
+                //getWorld().removeObject(this);
+            }
             dust.startFadingOut();
             return;
-        } else {
+        }else {
             followMainPerson(1, walkImages, attackImages);
             checkCollisionAndAttack();
             if (!getIsAttacking()) {
@@ -52,7 +54,7 @@ public class FirstEnemy extends Enemy
             
             if(getIsAttacking()){
                 animationPerson(attackImages, currentImage, animationCounter, attackImages.length + 4);
-                killMainPerson();
+                killMainPerson(1);
             }
           
         }

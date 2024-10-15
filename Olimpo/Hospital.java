@@ -2,7 +2,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
 
 public class Hospital extends World {
-    private FirstWorld firstWorld;
+    private World world;
     private Doctor doctor;
     private Person person;
     // Tolerâncias para o teletransporte
@@ -13,9 +13,9 @@ public class Hospital extends World {
     private int timeForTreatment = 5;
     
 
-    public Hospital(World firstWorld) {    
+    public Hospital(World world) {    
         super(655, 473, 1); 
-        this.firstWorld = (FirstWorld) firstWorld;
+        this.world = world;
         this.doctor = new Doctor();
         addObject(this.doctor, 478, 375);
         //MainPerson p = new MainPerson(100);
@@ -45,7 +45,7 @@ public class Hospital extends World {
 
     @Override
     public void act() {
-        TeleportUtils.teleportBackToWorld(this, firstWorld, 150, 225, TOLERANCE_X, TOLERANCE_Y);
+        TeleportUtils.teleportBackToWorld(this, world, 150, 225, TOLERANCE_X, TOLERANCE_Y);
         treatment();
     }
 }

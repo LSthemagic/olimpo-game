@@ -1,31 +1,25 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
 
-/**
- * Write a description of class GoodPerson here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class GoodPerson extends Person
 {
-    protected static int powerAttack = 1;
     private boolean isAtacking = false;
     private boolean gameIsOver = false;
     protected static int quantityGoodPersonsDead = 0; 
+    private boolean isSpecialUsed = false;
     int delay = 10;
     int count = 0;
     
+    int delayTimeDead = 5;
+    int countTimeDead = 0;
+    
     public GoodPerson(int health) {
         super(health);
-        
     }
     
     public void updateDeathCountAndCheckGameOver() {
-        //System.out.println("ta chamando");
         if (!gameIsOver) { 
             quantityGoodPersonsDead++;
-            //System.out.println("lonely..." + quantityGoodPersonsDead);
             if (quantityGoodPersonsDead >= 2) {
                 quantityGoodPersonsDead = 0;
                 gameOverScreen();
@@ -35,8 +29,6 @@ public class GoodPerson extends Person
     
     private void gameOverScreen() {
         Greenfoot.playSound("gameover.mp3");
-        //System.out.println("bem amigos, acabou...");
-        //getBgSound().stop();
         Greenfoot.setWorld(new GameOverScreen());
         gameIsOver = true;
     }
@@ -53,32 +45,51 @@ public class GoodPerson extends Person
         }
     }
     
-    protected void eliminateEnemy() {
+    protected void eliminateEnemy(int powerAttack) {
         if (isTouching(Enemy.class)) {
             Enemy enemy = (Enemy) getOneIntersectingObject(Enemy.class);
-            List<Enemy> listEnemys = getWorld().getObjects(Enemy.class);
-            System.out.println(listEnemys.size());
             if (enemy != null && isAtacking) {
-                if (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("q")) {
-                    count++;
-                    if(count >= delay){
-                        count = 0;
+                count++;
+                if (count >= delay) {
+                    count = 0;
+                    
+                    if(powerAttack >= 50 && !isSpecialUsed){
+                        isSpecialUsed = true;
                         enemy.updateHealth(powerAttack);
+                    }else{
+                        enemy.updateHealth(2);
                     }
                 }
+
+                // Marcar o inimigo como morto, mas não removê-lo imediatamente
                 if (enemy.getIsDead()) {
+                    enemy.setMarkedForRemoval();  // Método para indicar que o inimigo será removido
                     Greenfoot.playSound("win.mp3");
                 }
+
+                // Atualizar a lista de inimigos ainda ativos
+                List<Enemy> listEnemys = getWorld().getObjects(Enemy.class);
                 
-                if (listEnemys.size() <= 0) {
+                // Verifique se restam inimigos não marcados para remoção
+                boolean allEnemiesMarkedForRemoval = true;
+                for (Enemy e : listEnemys) {
+                    if (!e.isMarkedForRemoval()) {
+                        allEnemiesMarkedForRemoval = false;
+                        break;
+                    }
+                }
+
+                // Se todos os inimigos estiverem marcados para remoção e a animação de morte tiver terminado
+                if (allEnemiesMarkedForRemoval) {
                     Greenfoot.playSound("victory.mp3");
-                    getWorld().addObject(new VictoryScene(), 375, 250);
+                    Greenfoot.delay(10);  // Adicione um pequeno delay para garantir que a animação termine
+                    Greenfoot.setWorld(new LevelPassed(getWorld()));  // Passar para a próxima fase
                 }
             }
         }
     }
     
-    public boolean getIsAttacking(){
+    public boolean getIsAttacking() {
         return isAtacking;
     }
 }

@@ -6,9 +6,10 @@ public class Enemy extends Person
     
     private boolean isInverted = false;
     private int timeAttack = 0;
-    private int powerAttack = 2;
     private boolean isAttacking = false;
-    
+    private boolean markedForRemoval = false;
+    private boolean imageInverse = false;
+    boolean deadAnimationFinished = false;
     
     public Enemy(int health){
         super(health);
@@ -16,6 +17,18 @@ public class Enemy extends Person
     
     public Enemy(){
         super(100);
+    }
+    
+    public void setMarkedForRemoval() {
+        this.markedForRemoval = true;
+    }
+    
+    public boolean isMarkedForRemoval() {
+        return this.markedForRemoval;
+    }
+    
+    public boolean isDeadAnimationFinished() {
+        return this.deadAnimationFinished;
     }
     
     protected void followMainPerson(int speed, GreenfootImage[] walkingImages, GreenfootImage[] attackImages) {
@@ -51,12 +64,22 @@ public class Enemy extends Person
     
                 // Inverte as imagens se necessário, dependendo da direção
                 if (walkingImages != null) {
-                    if (dx < 0 && !isInverted) {
-                        isInverted = true;
-                        invertImage(walkingImages, attackImages);
-                    } else if (dx > 0 && isInverted) {
-                        isInverted = false;
-                        invertImage(walkingImages, attackImages);
+                    if(!imageInverse){
+                        if (dx < 0 && !isInverted) {
+                            isInverted = true;
+                            invertImage(walkingImages, attackImages);
+                        } else if (dx > 0 && isInverted) {
+                            isInverted = false;
+                            invertImage(walkingImages, attackImages);
+                        }
+                    }else{
+                        if (dx > 0 && !isInverted) {
+                            isInverted = true;
+                            invertImage(walkingImages, attackImages);
+                        } else if (dx < 0 && isInverted) {
+                            isInverted = false;
+                            invertImage(walkingImages, attackImages);
+                        }
                     }
                 }
                 
@@ -74,6 +97,10 @@ public class Enemy extends Person
         }
     }
     
+    public void setImageIsInverse(boolean imageInverse){
+        this.imageInverse = imageInverse;
+    }
+    
     protected boolean getIsAttacking(){
         return isAttacking;
     }
@@ -82,13 +109,13 @@ public class Enemy extends Person
         return isInverted;
     }
     
-    protected void killMainPerson(){
+    protected void killMainPerson(int power){
         GoodPerson goodPerson = (GoodPerson) getOneIntersectingObject(GoodPerson.class);
         timeAttack++;
         if (timeAttack == 25) { 
             timeAttack = 0;
             if(goodPerson != null){
-                goodPerson.updateHealth(powerAttack);
+                goodPerson.updateHealth(power);
             }   
         }
     }

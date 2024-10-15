@@ -5,6 +5,7 @@ public class Person extends Actor {
     private int health = 0;
     private int maxHealth = 0;
     private boolean isDead = false;
+    
     private HealthBar healthBar;
     private Dust dust;
     private boolean isMoving = false;
@@ -25,7 +26,9 @@ public class Person extends Actor {
 
     public void setIsMoving(boolean isMoving){
         this.isMoving = isMoving;
-    }     
+    }  
+    
+    
 
     @Override
     protected void addedToWorld(World world) {
@@ -71,6 +74,8 @@ public class Person extends Actor {
     public boolean getIsDead(){
         return isDead;
     }
+    
+    
     
     public void updateHealth(int damage) {
         health -= damage;   

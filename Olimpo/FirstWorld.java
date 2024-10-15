@@ -15,9 +15,9 @@ public class FirstWorld extends World {
     private GreenfootSound bgSound = new GreenfootSound("fundo.mp3");
 
     public FirstWorld() {    
-        super(1067, 600, 1); 
+        super(900, 600, 1); 
         
-        setBackground("world/coliseu.jpg");
+        setBackground("world/coliseu.png");
         
         mainPerson = new MainPerson(100);
         second = new SecondPerson(100);
@@ -42,6 +42,7 @@ public class FirstWorld extends World {
     public void act() {
         TeleportUtils.teleportToHospital(this, 510, 10, TOLERANCE_X, TOLERANCE_Y);
         weatherTimer++;
+        bgSound.setVolume(25);
         bgSound.play();
         if (weatherTimer > 600) {
             weatherTimer = 0;
